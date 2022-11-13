@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Route, Switch, useLocation, Redirect, useHistory } from 'react-router-dom';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -10,12 +11,12 @@ import DeleteConformationPopup from './DeleteConformationPopup';
 import Spinner from './Spinner';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
 import * as auth from "../utils/auth";
 import InfoToolTip from "./InfoToolTip";
+import MenuBurger from './MenuBurger';
 
 export default function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -31,6 +32,9 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isPopupLoading, setIsPopupLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [isShowMenu, setIsShowMenu] = useState('menu-burger_type_close');
+  const [classHeaderMenu, setClassHeaderMenu] = useState('header__menu_type_closed');
+  const location = useLocation();
   const history = useHistory();
   const [isInfoToolTipPopupOpen, setInfoToolTipPopupOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -149,10 +153,8 @@ export default function App() {
       .catch(err => console.log(err));
   }, []);
 
-  //Хук для проверки токена при каждом монтировании компонента App
-  React.useEffect(() => {
+  useEffect(() => {
     const jwt = localStorage.getItem("jwt");
-    //проверим существует ли токен в хранилище браузера localStorage
     if (jwt) {
       auth
         .checkToken(jwt)
@@ -202,6 +204,8 @@ export default function App() {
         } else if (err.status === 401) {
           console.log("401 - пользователь с email не найден");
         }
+        setInfoToolTipPopupOpen(true);
+        setIsSuccess(false);
       });
   }
 
@@ -211,12 +215,39 @@ export default function App() {
     history.push("/sign-in");
   }
 
+  function showMenu() {
+    if (isShowMenu === 'menu-burger_type_close') {
+      setIsShowMenu('menu-burger_type_open');
+    } else {
+      setIsShowMenu('menu-burger_type_close');
+    }
+
+    if (classHeaderMenu === 'header__menu_type_opened') {
+      setClassHeaderMenu('header__menu_type_closed');
+    } else {
+      setClassHeaderMenu('header__menu_type_opened');
+    }
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-        <Header email={email} onSignOut={handleSignOut} />
+      {isLoggedIn
+      && <MenuBurger
+        email={email}
+        signOut={handleSignOut}
+        isShowMenu={isShowMenu}
+      />
+      }
+      <Header
+        isLoggedIn={isLoggedIn}
+        locaction={location}
+        email={email}
+        signOut={handleSignOut}
+        showMenu={showMenu}
+        classHeaderMenu={classHeaderMenu}
+      />
         <Switch>
-          <ProtectedRoute
+          {isLoading ? <Spinner /> : <ProtectedRoute
             exact
             path="/"
             isLoggedIn={isLoggedIn}
@@ -231,18 +262,24 @@ export default function App() {
             component={Main}
             isLoading={isLoading}
           >
-          </ProtectedRoute>
+          </ProtectedRoute>}
           <Route path="/sign-in">
-            <Login onLogin={handleLoginSubmit} />
+            <Login
+              handleLoginSubmit={handleLoginSubmit}
+              isLoggedIn={isLoggedIn}
+            />
           </Route>
           <Route path="/sign-up">
-            <Register onRegister={handleRegisterSubmit} />
+            <Register
+              handleRegisterSubmit={handleRegisterSubmit}
+              isLoggedIn={isLoggedIn}
+            />
           </Route>
           <Route>
             {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
           </Route>
         </Switch>
-        <Footer />
+        {isLoggedIn && <Footer />}
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
@@ -277,7 +314,6 @@ export default function App() {
           onClose={closeAllPopups}
           isSuccess={isSuccess}
         />
-      </div>
     </CurrentUserContext.Provider>
   );
 }

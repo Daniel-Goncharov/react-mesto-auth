@@ -7,7 +7,8 @@ export default function InfoToolTip(props) {
     <div
       className={`popup tooltip_popup ${props.isOpen ? "popup_opened" : ""}`}
     >
-      <div className="popup__container popup__container_type_tooltip">
+      <div className="popup__container popup__tooltip">
+        <button type="button" className="popup__closed-button" onClick={props.onClose} />
         {props.isSuccess ? (
           <>
             <img
@@ -31,8 +32,6 @@ export default function InfoToolTip(props) {
             </p>
           </>
         )}
-
-        <button type="button" className="popup__closed-button" onClick={props.onClose} />
       </div>
     </div>
   );

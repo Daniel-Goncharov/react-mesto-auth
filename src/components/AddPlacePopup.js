@@ -48,8 +48,8 @@ export default function AddPlacePopup(props) {
 
     if (!evt.target.validity.valid) {
       setNameError({
-        classInput: 'popup__input_type_error',
-        classError: 'popup__error_visible',
+        classInput: 'form__input_type_error',
+        classError: 'form__error_visible',
         errorMessage: evt.target.validationMessage
       });
       setIsNameValid(false);
@@ -68,8 +68,8 @@ export default function AddPlacePopup(props) {
 
     if (!evt.target.validity.valid) {
       setLinkError({
-        classInput: 'popup__input_type_error',
-        classError: 'popup__error_visible',
+        classInput: 'form__input_type_error',
+        classError: 'form__error_visible',
         errorMessage: evt.target.validationMessage
       });
       setIsLinkValid(false);
@@ -103,7 +103,7 @@ export default function AddPlacePopup(props) {
       isDisabled={!isFormValid}
     >
       <input
-        className={`popup__input popup__input_data_place-name ${nameError.classInput}`}
+        className={`form__input form__input_data_place-name ${nameError.classInput}`}
         id="placeName-input"
         type="text"
         name="name"
@@ -115,9 +115,9 @@ export default function AddPlacePopup(props) {
         value={name}
         onChange={handleNameChange}
       />
-      <span className={`popup__error placeName-input-error ${nameError.classError}`} >{nameError.errorMessage}</span>
+      <span className={`form__error placeName-input-error ${nameError.classError}`} >{nameError.errorMessage}</span>
       <input
-        className={`popup__input popup__input_data_place-url ${linkError.classInput}`}
+        className={`form__input form__input_data_place-url ${linkError.classInput}`}
         id="placeUrl-input"
         type="url"
         name="link"
@@ -126,7 +126,7 @@ export default function AddPlacePopup(props) {
         value={link}
         onChange={handleLinkChange}
       />
-      <span className={`popup__error placeUrl-input-error ${linkError.classError}`} >{linkError.errorMessage}</span>
+      <span className={`form__error placeUrl-input-error ${linkError.classError}`} >{linkError.errorMessage}</span>
     </PopupWithForm>
   )
 }

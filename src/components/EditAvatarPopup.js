@@ -27,8 +27,8 @@ export default function EditAvatarPopup(props) {
 
     if (!avatar.validity.valid) {
       setUrlError({
-        classInput: 'popup__input_type_error',
-        classError: 'popup__error_visible',
+        classInput: 'form__input_type_error',
+        classError: 'form__error_visible',
         errorMessage: avatar.validationMessage
       });
       setIsFormValid(false);
@@ -60,7 +60,7 @@ export default function EditAvatarPopup(props) {
       isDisabled={!isFormValid}
     >
       <input
-        className={`popup__input popup__input_data_place-url ${urlError.classInput}`}
+        className={`form__input form__input_data_place-url ${urlError.classInput}`}
         id="avatar-input"
         type="url"
         name="avatar-url"
@@ -69,7 +69,7 @@ export default function EditAvatarPopup(props) {
         ref={avatarRef}
         onChange={handleChange}
       />
-      <span className={`popup__error ${urlError.classError}`} >{urlError.errorMessage}</span>
+      <span className={`form__error ${urlError.classError}`} >{urlError.errorMessage}</span>
     </PopupWithForm>
   )
 }

@@ -7,15 +7,15 @@ export default function PopupWithForm({ name, isOpen, onClose, title, children, 
     >
       <div className={`popup__container popup__container_type_${name}`}>
         <button className="popup__closed-button" type="button" onClick={onClose}></button>
-        <h2 className={`popup__title popup__title_type_${name}`}>{title}</h2>
+        <h2 className={`form__title form__title_type_${name}`}>{title}</h2>
         <form
-          className={`popup__form popup__form_type_${name}`}
+          className={`form form_type_${name}`}
           name={name} method="post"
           onSubmit={onSubmit}
           noValidate
         >
           {children}
-          <button className={`popup__button ${isDisabled ? 'popup__button_disabled' : ''}`}
+          <button className={`form__submit-button ${isDisabled ? 'form__submit-button_disabled' : ''}`}
                   onClick={onSubmit} type="submit">{buttonText}</button>
         </form>
       </div>

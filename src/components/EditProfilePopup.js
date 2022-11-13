@@ -39,8 +39,8 @@ export default function EditProfilePopup(props) {
 
     if (!evt.target.validity.valid) {
       setNameError({
-        classInput: 'popup__input_type_error',
-        classError: 'popup__error_visible',
+        classInput: 'form__input_type_error',
+        classError: 'form__error_visible',
         errorMessage: evt.target.validationMessage
       });
       setIsFormValid(false);
@@ -59,8 +59,8 @@ export default function EditProfilePopup(props) {
 
     if (!evt.target.validity.valid) {
       setDescriptionError({
-        classInput: 'popup__input_type_error',
-        classError: 'popup__error_visible',
+        classInput: 'form__input_type_error',
+        classError: 'form__error_visible',
         errorMessage: evt.target.validationMessage
       });
       setIsFormValid(false);
@@ -94,7 +94,7 @@ export default function EditProfilePopup(props) {
       isDisabled={!isFormValid}
     >
       <input
-        className={`popup__input popup__input_data_name ${nameError.classInput}`}
+        className={`form__input form__input_data_name ${nameError.classInput}`}
         id="name-imput"
         type="text"
         name="name"
@@ -106,9 +106,9 @@ export default function EditProfilePopup(props) {
         value={name || ''}
         onChange={handleNameChange}
       />
-      <span className={`popup__error ${nameError.classError}`} >{nameError.errorMessage}</span>
+      <span className={`form__error ${nameError.classError}`} >{nameError.errorMessage}</span>
       <input
-        className={`popup__input popup__input_data_job ${descriptionError.classInput}`}
+        className={`form__input form__input_data_job ${descriptionError.classInput}`}
         id="job-imput"
         type="text"
         name="job"
@@ -120,7 +120,7 @@ export default function EditProfilePopup(props) {
         value={description || ''}
         onChange={handleDescriptionChange}
       />
-      <span className={`popup__error ${descriptionError.classError}`} >{descriptionError.errorMessage}</span>
+      <span className={`form__error ${descriptionError.classError}`} >{descriptionError.errorMessage}</span>
     </PopupWithForm>
   )
 }
