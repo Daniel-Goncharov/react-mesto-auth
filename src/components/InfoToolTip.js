@@ -33,6 +33,7 @@ export default function InfoToolTip(props) {
           </>
         )}
       </div>
+      <div className="popup__overlay" onClick={props.onClose}/>
     </div>
   );
 }
