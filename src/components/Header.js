@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 export default function Header(props) {
   function openAuthInfo() {
-    props.showMenu('burger__position1');
+    props.showMenu('burger__position');
   }
 
   const { pathname } = useLocation();

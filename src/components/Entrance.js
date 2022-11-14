@@ -115,12 +115,13 @@ export default function Entrance({
           <button className="form__submit-button form__submit-button_type_inverted" type="submit">
             {buttonText}
           </button>
-          {isRegister && (<div className="entrance__signup">
-            <p className="entrance__signup_text">{signupText}</p>
-            <Link to="sign-in" className="entrance__signup_link">
-            {linkText}
-            </Link>
-          </div>)}
+          {isRegister && (
+            <div className="entrance__signup">
+              <p className="entrance__signup_text">{signupText}</p>
+              <Link to="sign-in" className="entrance__signup_link">
+              {linkText}
+              </Link>
+            </div>)}
         </form>
       </section>
   );

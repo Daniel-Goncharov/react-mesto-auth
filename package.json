@@ -1,8 +1,10 @@
 {
-  "name": "mesto-react",
+  "name": "mesto-react-auth",
   "version": "0.1.0",
+  "description": "Learning project",
+  "author": "Daniil Goncharov",
   "private": true,
-  "homepage": "https://daniel-goncharov.github.io/react-mesto-auth/",
+  "homepage": ".",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

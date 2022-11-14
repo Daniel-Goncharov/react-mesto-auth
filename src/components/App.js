@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Switch, useLocation, Redirect, useHistory } from 'react-router-dom';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -9,14 +10,13 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import DeleteConformationPopup from './DeleteConformationPopup';
 import Spinner from './Spinner';
-import api from '../utils/api';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
-import * as auth from "../utils/auth";
 import InfoToolTip from "./InfoToolTip";
 import MenuBurger from './MenuBurger';
+import api from '../utils/api';
+import * as auth from "../utils/auth";
 
 export default function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);

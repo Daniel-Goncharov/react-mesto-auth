@@ -9,6 +9,9 @@
 @import url(../blocks/header/__user-info/header__user-info.css);
 @import url(../blocks/header/__logo/header__logo.css);
 @import url(../blocks/header/__button-exit/header__button-exit.css);
+@import url(../blocks/header/__menu/header__menu.css);
+@import url(../blocks/header/__menu/_type/header__menu_type_closed.css);
+@import url(../blocks/header/__menu/_type/header__menu_type_opened.css);
 @import url(../blocks/profile/profile.css);
 @import url(../blocks/profile/__pic/profile__pic.css);
 @import url(../blocks/profile/__info/profile__info.css);
@@ -42,6 +45,9 @@
 @import url(../blocks/popup/__picture/popup__picture.css);
 @import url(../blocks/popup/__picture-title/popup__picture-title.css);
 @import url(../blocks/popup/__closed-button/popup__closed-button.css);
+@import url(../blocks/popup/__tooltip/_image/popup__tooltip_image.css);
+@import url(../blocks/popup/__tooltip/_message/popup__tooltip_message.css);
+@import url(../blocks/popup/__container-tooltip/popup__container-tooltip.css);
 @import url(../blocks/form/__title/form__title.css);
 @import url(../blocks/form/form.css);
 @import url(../blocks/form/__input/form__input.css);
@@ -59,15 +65,9 @@
 @import url(../blocks/entrance/__signup/_link/entrance__signup_link.css);
 @import url(../blocks/entrance/__signup/_text/entrance__signup_text.css);
 @import url(../blocks/form/__title/_type/form__title_type_inverted.css);
-@import url(../blocks/popup/__tooltip/_image/popup__tooltip_image.css);
-@import url(../blocks/popup/__tooltip/_message/popup__tooltip_message.css);
-@import url(../blocks/popup/__tooltip/popup__tooltip.css);
 @import url(../blocks/menu-burger/menu-burger.css);
 @import url(../blocks/menu-burger/__position/menu-burger__position.css);
 @import url(../blocks/menu-burger/__exit/menu-burger__exit.css);
 @import url(../blocks/menu-burger/_type/menu-burger_type_close.css);
 @import url(../blocks/menu-burger/_type/menu-burger_type_open.css);
-@import url(../blocks/header/__menu/header__menu.css);
-@import url(../blocks/header/__menu/_type/header__menu_type_closed.css);
-@import url(../blocks/header/__menu/_type/header__menu_type_opened.css);
 

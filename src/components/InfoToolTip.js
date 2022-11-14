@@ -7,7 +7,7 @@ export default function InfoToolTip(props) {
     <div
       className={`popup tooltip_popup ${props.isOpen ? "popup_opened" : ""}`}
     >
-      <div className="popup__container popup__tooltip">
+      <div className="popup__container popup__container-tooltip">
         <button type="button" className="popup__closed-button" onClick={props.onClose} />
         {props.isSuccess ? (
           <>
