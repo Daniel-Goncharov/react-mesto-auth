@@ -2,55 +2,40 @@ import React, { useEffect, useState, useContext } from 'react'
 import PopupWithForm from './PopupWithForm'
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-export default function EditProfilePopup(props) {
-  const [name, setName] = useState('')
+export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePopupLoading, onClose}) {
   const currentUser = useContext(CurrentUserContext)
-  const [nameError, setNameError] = useState({
-    classInput: '',
-    classError: '',
-    errorMessage: ''
-  })
+  const [name, setName] = useState('')
+  const [nameError, setNameError] = useState({ errorMessage: '' })
   const [description, setDescription] = useState('')
-  const [descriptionError, setDescriptionError] = useState({
-    classInput: '',
-    classError: '',
-    errorMessage: ''
-  })
-  const [isFormValid, setIsFormValid] = useState(true);
+  const [descriptionError, setDescriptionError] = useState({ errorMessage: '' })
+  const [isNameValid, setIsNameValid] = useState(false)
+  const [isDescriptionValid, setIsDescriptionValid] = useState(false)
+  const isFormValid = isNameValid && isDescriptionValid;
+  const [isNameError, setIsNameError] = useState(false)
+  const [isDescriptionError, setIsDescriptionError] = useState(false)
 
   useEffect(() => {
-    setName(currentUser.name)
-    setDescription(currentUser.about)
-    setIsFormValid(true);
-    setNameError({
-      classInput: '',
-      classError: '',
-      errorMessage: ''
-    });
-    setDescriptionError({
-      classInput: '',
-      classError: '',
-      errorMessage: ''
-    });
-  }, [currentUser, props.isOpen])
+    setNameError({ errorMessage: '' });
+    setDescriptionError({ errorMessage: '' });
+    setName(currentUser.name);
+    setDescription(currentUser.about);
+    setIsNameValid(true);
+    setIsNameError(false);
+    setIsDescriptionValid(true);
+    setIsDescriptionError(false);
+  }, [currentUser, isOpen])
 
   function handleNameChange(evt) {
     setName(evt.target.value)
 
     if (!evt.target.validity.valid) {
-      setNameError({
-        classInput: 'form__input_type_error',
-        classError: 'form__error_visible',
-        errorMessage: evt.target.validationMessage
-      });
-      setIsFormValid(false);
+      setNameError({ errorMessage: evt.target.validationMessage });
+      setIsNameValid(false);
+      setIsNameError(true);
     } else {
-      setNameError({
-        classInput: '',
-        classError: '',
-        errorMessage: ''
-      });
-      setIsFormValid(true);
+      setNameError({ errorMessage: '' });
+      setIsNameValid(true);
+      setIsNameError(false);
     }
   }
 
@@ -58,43 +43,36 @@ export default function EditProfilePopup(props) {
     setDescription(evt.target.value)
 
     if (!evt.target.validity.valid) {
-      setDescriptionError({
-        classInput: 'form__input_type_error',
-        classError: 'form__error_visible',
-        errorMessage: evt.target.validationMessage
-      });
-      setIsFormValid(false);
+      setDescriptionError({ errorMessage: evt.target.validationMessage });
+      setIsDescriptionValid(false);
+      setIsDescriptionError(true);
     } else {
-      setDescriptionError({
-        classInput: '',
-        classError: '',
-        errorMessage: ''
-      });
-      setIsFormValid(true);
+      setDescriptionError({ errorMessage: '' });
+      setIsDescriptionValid(true);
+      setIsDescriptionError(false);
     }
   }
 
   function handleSubmit(evt) {
     evt.preventDefault()
-    props.onUpdateUser({
+    onUpdateUser({
       name: name,
       about: description,
     })
-    setIsFormValid(true);
   }
 
   return (
     <PopupWithForm
       title="Редактировать профиль"
       name="profile"
-      buttonText={props.isPopupLoading ? 'Сохранение...' : 'Сохранить'}
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      buttonText={isEditProfilePopupLoading ? 'Сохранение...' : 'Сохранить'}
+      isOpen={isOpen}
+      onClose={onClose}
       onSubmit={handleSubmit}
       isDisabled={!isFormValid}
     >
       <input
-        className={`form__input form__input_data_name ${nameError.classInput}`}
+        className={`form__input form__input_data_name ${isNameError ? "form__input_type_error" : ""}`}
         id="name-imput"
         type="text"
         name="name"
@@ -106,9 +84,9 @@ export default function EditProfilePopup(props) {
         value={name || ''}
         onChange={handleNameChange}
       />
-      <span className={`form__error ${nameError.classError}`} >{nameError.errorMessage}</span>
+      <span className={`form__error ${!isFormValid ? "form__error_visible" : ""}`} >{nameError.errorMessage}</span>
       <input
-        className={`form__input form__input_data_job ${descriptionError.classInput}`}
+        className={`form__input form__input_data_job ${isDescriptionError ? "form__input_type_error" : ""}`}
         id="job-imput"
         type="text"
         name="job"
@@ -120,7 +98,7 @@ export default function EditProfilePopup(props) {
         value={description || ''}
         onChange={handleDescriptionChange}
       />
-      <span className={`form__error ${descriptionError.classError}`} >{descriptionError.errorMessage}</span>
+      <span className={`form__error ${!isDescriptionValid ? "form__error_visible" : ""}`} >{descriptionError.errorMessage}</span>
     </PopupWithForm>
   )
 }

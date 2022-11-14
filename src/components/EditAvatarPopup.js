@@ -1,50 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PopupWithForm from './PopupWithForm'
 
-export default function EditAvatarPopup(props) {
+export default function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isEditAvatarPopupLoading }) {
   const avatarRef = useRef()
 
-  const [urlError, setUrlError] = useState({
-    classInput: '',
-    classError: '',
-    errorMessage: ''
-  });
-
+  const [urlError, setUrlError] = useState({ errorMessage: '' });
+  const [isUrlError, setIsUrlError] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
-    setUrlError({
-      classInput: '',
-      classError: '',
-      errorMessage: ''
-    });
+    setUrlError({ errorMessage: '' });
     setIsFormValid(false);
+    setIsUrlError(false);
     avatarRef.current.value = '';
-  }, [props.isOpen]);
+  }, [isOpen]);
 
   function handleChange() {
     const avatar = avatarRef.current;
 
     if (!avatar.validity.valid) {
-      setUrlError({
-        classInput: 'form__input_type_error',
-        classError: 'form__error_visible',
-        errorMessage: avatar.validationMessage
-      });
+      setUrlError({ errorMessage: avatar.validationMessage });
       setIsFormValid(false);
+      setIsUrlError(true);
     } else {
-      setUrlError({
-        classInput: '',
-        classError: '',
-        errorMessage: ''
-      });
+      setUrlError({ errorMessage: '' });
       setIsFormValid(true);
+      setIsUrlError(false);
     }
   }
 
   function handleSubmit(evt) {
     evt.preventDefault()
-    props.onUpdateAvatar({
+    onUpdateAvatar({
       avatar: avatarRef.current.value
     })
   }
@@ -53,14 +40,14 @@ export default function EditAvatarPopup(props) {
     <PopupWithForm
       title="Обновить аватар"
       name="avatar"
-      buttonText={props.isPopupLoading ? 'Сохранение...' : 'Сохранить'}
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      buttonText={isEditAvatarPopupLoading ? 'Сохранение...' : 'Сохранить'}
+      isOpen={isOpen}
+      onClose={onClose}
       onSubmit={handleSubmit}
       isDisabled={!isFormValid}
     >
       <input
-        className={`form__input form__input_data_place-url ${urlError.classInput}`}
+        className={`form__input form__input_data_place-url ${isUrlError ? "form__input_type_error" : ""}`}
         id="avatar-input"
         type="url"
         name="avatar-url"
@@ -69,7 +56,7 @@ export default function EditAvatarPopup(props) {
         ref={avatarRef}
         onChange={handleChange}
       />
-      <span className={`form__error ${urlError.classError}`} >{urlError.errorMessage}</span>
+      <span className={`form__error ${!isFormValid ? "form__error_visible" : ""}`} >{urlError.errorMessage}</span>
     </PopupWithForm>
   )
 }

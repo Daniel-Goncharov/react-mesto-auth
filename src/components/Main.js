@@ -4,6 +4,14 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 export default function Main({onEditAvatar, onEditProfile, onAddPlace, onCardClick, handleCardLike, onCardDelete, cards}) {
   const currentUser = React.useContext(CurrentUserContext)
+  const cardsElements = cards.map((card) => (
+    <li key={card._id}><Card
+      card={card}
+      onCardClick={onCardClick}
+      onCardLike={handleCardLike}
+      onCardDelete={onCardDelete}
+    />
+    </li>))
 
   return (
     <main className="content">
@@ -23,17 +31,18 @@ export default function Main({onEditAvatar, onEditProfile, onAddPlace, onCardCli
       </section>
       <section className="elements">
         <ul className="elements__container">
-        {
-            cards.map((card) => (
-            <Card key={card._id}
-              card={card}
-              onCardClick={onCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={onCardDelete}
-            />))
-        }
+        { cardsElements }
         </ul>
       </section>
     </main>
   )
 }
+// {
+//   cards.map((card) => (
+//   <li key={card._id}><Card
+//     card={card}
+//     onCardClick={onCardClick}
+//     onCardLike={handleCardLike}
+//     onCardDelete={onCardDelete}
+//   /></li>))
+// }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, useLocation, Redirect, useHistory } from 'react-router-dom';
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Header from './Header';
 import Main from './Main';
@@ -14,7 +14,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
 import InfoToolTip from "./InfoToolTip";
-import MenuBurger from './MenuBurger';
+
 import api from '../utils/api';
 import * as auth from "../utils/auth";
 
@@ -30,14 +30,16 @@ export default function App() {
   const [cards, setCards] = useState([])
   const [cardDelete, setCardDelete] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isPopupLoading, setIsPopupLoading] = useState(false);
+  const [isEditAvatarPopupLoading, setIsEditAvatarPopupLoading] = useState(false);
+  const [isEditProfilePopupLoading, setIsEditProfilePopupLoading] = useState(false);
+  const [isAddPlacePopupLoading, setIsAddPlacePopupLoading] = useState(false);
+  const [isConfirmPopupLoading, setIsConfirmLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [isShowMenu, setIsShowMenu] = useState('menu-burger_type_close');
-  const [classHeaderMenu, setClassHeaderMenu] = useState('header__menu_type_closed');
-  const location = useLocation();
+
+
   const history = useHistory();
   const [isInfoToolTipPopupOpen, setInfoToolTipPopupOpen] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccessTooltipStatus, setIsSuccessTooltipStatus] = useState(false);
 
 
   function handleEditAvatarClick() {
@@ -67,22 +69,8 @@ export default function App() {
     setInfoToolTipPopupOpen(false);
   }
 
-  function handleEsc(evt) {
-    if (evt.key === 'Escape') {
-      closeAllPopups()
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleEsc);
-
-    return () => {
-      window.removeEventListener('keydown', handleEsc);
-    };
-  });
-
   function onUpdateUser(userData) {
-    setIsPopupLoading(true);
+    setIsEditProfilePopupLoading(true);
     api.setUserInfoApi(userData)
       .then((data) => {
         setCurrentUser(data)
@@ -90,12 +78,12 @@ export default function App() {
       })
       .catch((err) => console.log(err))
       .finally(() => {
-        setIsPopupLoading(false);
+        setIsEditProfilePopupLoading(false);
       })
   }
 
   function onUpdateAvatar(userData) {
-    setIsPopupLoading(true);
+    setIsEditAvatarPopupLoading(true);
     api.changeAvatar(userData)
       .then((data) => {
         setCurrentUser(data)
@@ -103,7 +91,7 @@ export default function App() {
       })
       .catch((err) => console.log(err))
       .finally(() => {
-        setIsPopupLoading(false);
+        setIsEditAvatarPopupLoading(false);
       })
   }
 
@@ -117,20 +105,20 @@ export default function App() {
   }
 
   function handleCardDelete() {
-    setIsPopupLoading(true);
+    setIsConfirmLoading(true);
     api.deleteCard(cardDelete._id)
     .then(() => {
-      setCards(cards.filter((item) => item._id !== cardDelete._id));
+      setCards((state) => state.filter((c) => c._id !== cardDelete._id));
       closeAllPopups();
     })
     .catch((err) => console.log(err))
     .finally(() => {
-      setIsPopupLoading(false);
+      setIsConfirmLoading(false);
     })
   }
 
   function handleAddPlaceSubmit(cardData) {
-    setIsPopupLoading(true);
+    setIsAddPlacePopupLoading(true);
     api.addCardServer(cardData)
       .then((newCard) => {
         setCards([newCard, ...cards])
@@ -138,20 +126,22 @@ export default function App() {
       })
       .catch((err) => console.log(err))
       .finally(() => {
-        setIsPopupLoading(false);
+        setIsAddPlacePopupLoading(false);
       })
   }
 
   useEffect(() => {
-    setIsLoading(true)
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
+    if (isLoggedIn) {
+      setIsLoading(true)
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([initialUserInfo, initialCards]) => {
         setCurrentUser(initialUserInfo);
         setCards(initialCards);
         setIsLoading(false)
       })
       .catch(err => console.log(err));
-  }, []);
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -176,24 +166,25 @@ export default function App() {
     auth
       .register(email, password)
       .then((res) => {
-        setInfoToolTipPopupOpen(true);
-        setIsSuccess(true);
+
+        setIsSuccessTooltipStatus(true);
         history.push("/sign-in");
       })
       .catch((err) => {
         if (err.status === 400) {
           console.log("400 - некорректно заполнено одно из полей");
         }
+        setIsSuccessTooltipStatus(false);
+      })
+      .finally(() => {
         setInfoToolTipPopupOpen(true);
-        setIsSuccess(false);
-      });
+      })
   }
 
   function handleLoginSubmit(email, password) {
     auth
       .login(email, password)
-      .then((res) => {
-        localStorage.setItem("jwt", res.token);
+      .then(() => {
         setIsLoggedIn(true);
         setEmail(email);
         history.push("/");
@@ -205,7 +196,7 @@ export default function App() {
           console.log("401 - пользователь с email не найден");
         }
         setInfoToolTipPopupOpen(true);
-        setIsSuccess(false);
+        setIsSuccessTooltipStatus(false);
       });
   }
 
@@ -215,36 +206,14 @@ export default function App() {
     history.push("/sign-in");
   }
 
-  function showMenu() {
-    if (isShowMenu === 'menu-burger_type_close') {
-      setIsShowMenu('menu-burger_type_open');
-    } else {
-      setIsShowMenu('menu-burger_type_close');
-    }
 
-    if (classHeaderMenu === 'header__menu_type_opened') {
-      setClassHeaderMenu('header__menu_type_closed');
-    } else {
-      setClassHeaderMenu('header__menu_type_opened');
-    }
-  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      {isLoggedIn
-      && <MenuBurger
-        email={email}
-        signOut={handleSignOut}
-        isShowMenu={isShowMenu}
-      />
-      }
       <Header
         isLoggedIn={isLoggedIn}
-        locaction={location}
         email={email}
         signOut={handleSignOut}
-        showMenu={showMenu}
-        classHeaderMenu={classHeaderMenu}
       />
         <Switch>
           {isLoading ? <Spinner /> : <ProtectedRoute
@@ -284,25 +253,25 @@ export default function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={onUpdateUser}
-          isPopupLoading={isPopupLoading}
+          isEditProfilePopupLoading={isEditProfilePopupLoading}
         />
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit}
-          isPopupLoading={isPopupLoading}
+          isAddPlacePopupLoading={isAddPlacePopupLoading}
         />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={onUpdateAvatar}
-          isPopupLoading={isPopupLoading}
+          isEditAvatarPopupLoading={isEditAvatarPopupLoading}
         />
         <DeleteConformationPopup
           isOpen={isConfirmPopupOpen}
           onClose={closeAllPopups}
           onCardDelete={handleCardDelete}
-          isPopupLoading={isPopupLoading}
+          isConfirmPopupLoading={isConfirmPopupLoading}
         />
         <ImagePopup
           isOpen={isImagePopupOpen}
@@ -312,7 +281,7 @@ export default function App() {
         <InfoToolTip
           isOpen={isInfoToolTipPopupOpen}
           onClose={closeAllPopups}
-          isSuccess={isSuccess}
+          isSuccessTooltipStatus={isSuccessTooltipStatus}
         />
     </CurrentUserContext.Provider>
   );

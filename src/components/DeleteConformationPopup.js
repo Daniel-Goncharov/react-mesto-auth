@@ -1,20 +1,20 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-export default function DeleteConformationPopup(props) {
+export default function DeleteConformationPopup({ isOpen, onClose, isConfirmPopupLoading, onCardDelete }) {
   function handleCardDelete(evt) {
     evt.preventDefault();
 
-    props.onCardDelete();
+    onCardDelete();
   }
 
   return (
     <PopupWithForm
       title="Вы уверены?"
       name="confirmation"
-      buttonText={props.isPopupLoading ? 'Удаление...' : 'Да'}
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      buttonText={isConfirmPopupLoading ? 'Удаление...' : 'Да'}
+      isOpen={isOpen}
+      onClose={onClose}
       onSubmit={handleCardDelete}
     />
   )

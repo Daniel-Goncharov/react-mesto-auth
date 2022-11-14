@@ -11,47 +11,38 @@ export default function Entrance({
   handleRegisterSubmit,
   isLoggedIn
 }) {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState({
-    classInput: '',
-    classError: '',
-    errorMessage: ''
-  })
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState({
-    classInput: '',
-    classError: '',
-    errorMessage: ''
-  })
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState({ errorMessage: '' })
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState({ errorMessage: '' })
+  const [isEmailValid, setIsEmailValid] = useState(false)
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
+  const isFormValid = isEmailValid && isPasswordValid;
+  const [isEmailError, setIsEmailError] = useState(false)
+  const [isPasswordError, setIsPasswordError] = useState(false)
 
   useEffect(() => {
-    setEmailError({
-      classInput: '',
-      classError: '',
-      errorMessage: ''
-    });
-    setPasswordError({
-      classInput: '',
-      classError: '',
-      errorMessage: ''
-    });
+    setEmailError({ errorMessage: '' });
+    setPasswordError({ errorMessage: '' });
+    setEmail('');
+    setPassword('');
+    setIsEmailValid(false);
+    setIsEmailError(false);
+    setIsPasswordValid(false);
+    setIsPasswordError(false);
   }, [])
 
   function handleEmailChange(evt) {
     setEmail(evt.target.value);
 
     if (!evt.target.validity.valid) {
-      setEmailError({
-        classInput: 'form__input_type_error',
-        classError: 'form__error_visible',
-        errorMessage: evt.target.validationMessage
-      });
+      setEmailError({ errorMessage: evt.target.validationMessage });
+      setIsEmailValid(false)
+      setIsEmailError(true)
     } else {
-      setEmailError({
-        classInput: '',
-        classError: '',
-        errorMessage: ''
-      });
+      setEmailError({ errorMessage: '' });
+      setIsEmailValid(true)
+    setIsEmailError(false)
     }
   }
 
@@ -59,17 +50,13 @@ export default function Entrance({
     setPassword(evt.target.value);
 
     if (!evt.target.validity.valid) {
-      setPasswordError({
-        classInput: 'form__input_type_error',
-        classError: 'form__error_visible',
-        errorMessage: evt.target.validationMessage
-      });
+      setPasswordError({ errorMessage: evt.target.validationMessage });
+      setIsPasswordValid(false);
+      setIsPasswordError(true);
     } else {
-      setPasswordError({
-        classInput: '',
-        classError: '',
-        errorMessage: ''
-      });
+      setPasswordError({ errorMessage: '' });
+      setIsPasswordValid(true);
+      setIsPasswordError(false);
     }
   }
 
@@ -83,7 +70,9 @@ export default function Entrance({
   }
 
   if (isLoggedIn) {
-    return <>{isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}</>;
+    return (
+      <Redirect to="/"/>
+    )
   }
 
   return (
@@ -92,17 +81,17 @@ export default function Entrance({
         <form className="form form_type_entrance" onSubmit={handleSubmit} noValidate>
           <input
             onChange={handleEmailChange}
-            className={`form__input form__input_type_inverted ${emailError.classInput}`}
+            className={`form__input form__input_type_inverted ${isEmailError ? "form__input_type_error" : ""}`}
             placeholder="Email"
             name="email"
             type="email"
             required
             value={email || ""}
           />
-          <span className={`form__error ${emailError.classError}`} >{emailError.errorMessage}</span>
+          <span className={`form__error placeName-input-error ${!isEmailValid ? "form__error_visible" : ""}`}>{emailError.errorMessage}</span>
           <input
             onChange={handlePasswordChange}
-            className={`form__input form__input_type_inverted ${passwordError.classInput}`}
+            className={`form__input form__input_type_inverted ${isPasswordError ? "form__input_type_error" : ""}`}
             placeholder="Пароль"
             name="password"
             type="password"
@@ -111,8 +100,8 @@ export default function Entrance({
             required
             value={password || ""}
           />
-          <span className={`form__error ${passwordError.classError}`} >{passwordError.errorMessage}</span>
-          <button className="form__submit-button form__submit-button_type_inverted" type="submit">
+          <span className={`form__error placeName-input-error ${!isPasswordValid ? "form__error_visible" : ""}`} >{passwordError.errorMessage}</span>
+          <button className={`form__submit-button form__submit-button_type_inverted ${!isFormValid ? 'form__submit-button_disabled' : ''}`} type="submit">
             {buttonText}
           </button>
           {isRegister && (

@@ -24,7 +24,7 @@ export default function Card({ onCardLike, onCardClick, onCardDelete, card }) {
   }
 
   return (
-    <li className="element">
+    <div className="element">
       <img className="element__picture"
         src={card.link}
         alt={card.name}
@@ -48,6 +48,6 @@ export default function Card({ onCardLike, onCardClick, onCardDelete, card }) {
         aria-label="Удаление карточки"
         onClick={handleDeleteClick}
         />
-    </li>
+    </div>
   )
 }
