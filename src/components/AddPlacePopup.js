@@ -9,8 +9,6 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
   const [isNameValid, setIsNameValid] = useState(false)
   const [isLinkValid, setIsLinkValid] = useState(false)
   const isFormValid = isNameValid && isLinkValid;
-  const [isNameError, setIsNameError] = useState(false)
-  const [isLinkError, setIsLinkError] = useState(false)
 
   useEffect(() => {
     setNameError({ errorMessage: '' });
@@ -18,9 +16,7 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
     setName('');
     setLink('');
     setIsNameValid(false);
-    setIsNameError(false);
     setIsLinkValid(false);
-    setIsLinkError(false);
   }, [isOpen]);
 
   function handleNameChange(evt) {
@@ -29,11 +25,9 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
     if (!evt.target.validity.valid) {
       setNameError({ errorMessage: evt.target.validationMessage });
       setIsNameValid(false);
-      setIsNameError(true);
     } else {
       setNameError({ errorMessage: '' });
       setIsNameValid(true);
-      setIsNameError(false);
     }
   }
 
@@ -43,11 +37,9 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
     if (!evt.target.validity.valid) {
       setLinkError({ errorMessage: evt.target.validationMessage });
       setIsLinkValid(false);
-      setIsLinkError(true);
     } else {
       setLinkError({ errorMessage: '' });
       setIsLinkValid(true);
-      setIsLinkError(false);
     }
   }
 
@@ -71,7 +63,7 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
       isDisabled={!isFormValid}
     >
       <input
-        className={`form__input form__input_data_place-url ${isNameError ? "form__input_type_error" : ""}`}
+        className={`form__input form__input_data_place-url`}
         id="placeName-input"
         type="text"
         name="name"
@@ -85,7 +77,7 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
       />
       <span className={`form__error placeName-input-error ${!isNameValid ? "form__error_visible" : ""}`} >{nameError.errorMessage}</span>
       <input
-        className={`form__input form__input_data_place-url ${isLinkError ? "form__input_type_error" : ""}`}
+        className={`form__input form__input_data_place-url`}
         id="placeUrl-input"
         type="url"
         name="link"

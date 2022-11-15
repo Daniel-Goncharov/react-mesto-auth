@@ -11,8 +11,6 @@ export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePo
   const [isNameValid, setIsNameValid] = useState(false)
   const [isDescriptionValid, setIsDescriptionValid] = useState(false)
   const isFormValid = isNameValid && isDescriptionValid;
-  const [isNameError, setIsNameError] = useState(false)
-  const [isDescriptionError, setIsDescriptionError] = useState(false)
 
   useEffect(() => {
     setNameError({ errorMessage: '' });
@@ -20,9 +18,7 @@ export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePo
     setName(currentUser.name);
     setDescription(currentUser.about);
     setIsNameValid(true);
-    setIsNameError(false);
     setIsDescriptionValid(true);
-    setIsDescriptionError(false);
   }, [currentUser, isOpen])
 
   function handleNameChange(evt) {
@@ -31,11 +27,9 @@ export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePo
     if (!evt.target.validity.valid) {
       setNameError({ errorMessage: evt.target.validationMessage });
       setIsNameValid(false);
-      setIsNameError(true);
     } else {
       setNameError({ errorMessage: '' });
       setIsNameValid(true);
-      setIsNameError(false);
     }
   }
 
@@ -45,11 +39,9 @@ export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePo
     if (!evt.target.validity.valid) {
       setDescriptionError({ errorMessage: evt.target.validationMessage });
       setIsDescriptionValid(false);
-      setIsDescriptionError(true);
     } else {
       setDescriptionError({ errorMessage: '' });
       setIsDescriptionValid(true);
-      setIsDescriptionError(false);
     }
   }
 
@@ -72,7 +64,7 @@ export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePo
       isDisabled={!isFormValid}
     >
       <input
-        className={`form__input form__input_data_name ${isNameError ? "form__input_type_error" : ""}`}
+        className={`form__input form__input_data_name`}
         id="name-imput"
         type="text"
         name="name"
@@ -86,7 +78,7 @@ export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePo
       />
       <span className={`form__error ${!isFormValid ? "form__error_visible" : ""}`} >{nameError.errorMessage}</span>
       <input
-        className={`form__input form__input_data_job ${isDescriptionError ? "form__input_type_error" : ""}`}
+        className={`form__input form__input_data_job`}
         id="job-imput"
         type="text"
         name="job"

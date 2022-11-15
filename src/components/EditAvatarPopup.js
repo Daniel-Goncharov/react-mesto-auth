@@ -5,13 +5,11 @@ export default function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isEdit
   const avatarRef = useRef()
 
   const [urlError, setUrlError] = useState({ errorMessage: '' });
-  const [isUrlError, setIsUrlError] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     setUrlError({ errorMessage: '' });
     setIsFormValid(false);
-    setIsUrlError(false);
     avatarRef.current.value = '';
   }, [isOpen]);
 
@@ -21,11 +19,9 @@ export default function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isEdit
     if (!avatar.validity.valid) {
       setUrlError({ errorMessage: avatar.validationMessage });
       setIsFormValid(false);
-      setIsUrlError(true);
     } else {
       setUrlError({ errorMessage: '' });
       setIsFormValid(true);
-      setIsUrlError(false);
     }
   }
 
@@ -47,7 +43,7 @@ export default function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isEdit
       isDisabled={!isFormValid}
     >
       <input
-        className={`form__input form__input_data_place-url ${isUrlError ? "form__input_type_error" : ""}`}
+        className={`form__input form__input_data_place-url`}
         id="avatar-input"
         type="url"
         name="avatar-url"

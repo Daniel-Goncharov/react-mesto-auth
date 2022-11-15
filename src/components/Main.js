@@ -37,12 +37,3 @@ export default function Main({onEditAvatar, onEditProfile, onAddPlace, onCardCli
     </main>
   )
 }
-// {
-//   cards.map((card) => (
-//   <li key={card._id}><Card
-//     card={card}
-//     onCardClick={onCardClick}
-//     onCardLike={handleCardLike}
-//     onCardDelete={onCardDelete}
-//   /></li>))
-// }
