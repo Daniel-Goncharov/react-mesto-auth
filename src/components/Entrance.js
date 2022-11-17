@@ -11,53 +11,26 @@ export default function Entrance({
   handleRegisterSubmit,
   isLoggedIn
 }) {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState({ errorMessage: '' })
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState({ errorMessage: '' })
-  const [isEmailValid, setIsEmailValid] = useState(false)
-  const [isPasswordValid, setIsPasswordValid] = useState(false)
-  const isFormValid = isEmailValid && isPasswordValid;
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState({ email: ' ', password: ' ' })
+  const isFormValid = !error.email && !error.password;
 
-  useEffect(() => {
-    setEmailError({ errorMessage: '' });
-    setPasswordError({ errorMessage: '' });
-    setEmail('');
-    setPassword('');
-    setIsEmailValid(false);
-    setIsPasswordValid(false);
-  }, [])
-
-  function handleEmailChange(evt) {
-    setEmail(evt.target.value);
+  function handleChange(evt) {
+    setFormData({ ...formData, [evt.target.name]: evt.target.value });
 
     if (!evt.target.validity.valid) {
-      setEmailError({ errorMessage: evt.target.validationMessage });
-      setIsEmailValid(false)
+      setError({ ...error, [evt.target.name]: evt.target.validationMessage });
     } else {
-      setEmailError({ errorMessage: '' });
-      setIsEmailValid(true)
-    }
-  }
-
-  function handlePasswordChange(evt) {
-    setPassword(evt.target.value);
-
-    if (!evt.target.validity.valid) {
-      setPasswordError({ errorMessage: evt.target.validationMessage });
-      setIsPasswordValid(false);
-    } else {
-      setPasswordError({ errorMessage: '' });
-      setIsPasswordValid(true);
+      setError({ ...error, [evt.target.name]: '' });
     }
   }
 
   function handleSubmit(evt) {
     evt.preventDefault();
     if (isRegister) {
-      handleRegisterSubmit(email, password);
+      handleRegisterSubmit(formData.email, formData.password);
     } else {
-      handleLoginSubmit(email, password);
+      handleLoginSubmit(formData.email, formData.password);
     }
   }
 
@@ -72,30 +45,30 @@ export default function Entrance({
         <h2 className="form__title form__title_type_inverted">{title}</h2>
         <form className="form form_type_entrance" onSubmit={handleSubmit} noValidate>
           <input
-            onChange={handleEmailChange}
-            className={`form__input form__input_type_inverted`}
+            onChange={handleChange}
+            className={`form__input form__input_type_inverted ${error.email ? "form__input_type_error" : ""}`}
             placeholder="Email"
             name="email"
             type="email"
             required
-            value={email || ""}
+            value={formData.email || ""}
           />
-          <span className={`form__error placeName-input-error ${!isEmailValid ? "form__error_visible" : ""}`}>{emailError.errorMessage}</span>
+          <span className={`form__error placeName-input-error ${error.email ? "form__error_visible" : ""}`}>{error.email}</span>
           <input
-            onChange={handlePasswordChange}
-            className={`form__input form__input_type_inverted`}
+            onChange={handleChange}
+            className={`form__input form__input_type_inverted ${error.password ? "form__input_type_error" : ""}`}
             placeholder="Пароль"
             name="password"
             type="password"
             minLength="6"
             maxLength="40"
             required
-            value={password || ""}
+            value={formData.password || ""}
           />
-          <span className={`form__error placeName-input-error ${!isPasswordValid ? "form__error_visible" : ""}`} >{passwordError.errorMessage}</span>
+          <span className={`form__error placeName-input-error ${error.password ? "form__error_visible" : ""}`} >{error.password}</span>
           <button
             disabled={!isFormValid}
-            className={`form__submit-button form__submit-button_type_inverted ${!isFormValid ? 'form__submit-button_disabled' : ''}`}
+            className={`form__submit-button form__submit-button_type_inverted ${!isFormValid ? 'form__submit-button_disabled' : ""}`}
             type="submit"
           >
             {buttonText}

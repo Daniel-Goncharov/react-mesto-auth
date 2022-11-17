@@ -4,52 +4,29 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePopupLoading, onClose}) {
   const currentUser = useContext(CurrentUserContext)
-  const [name, setName] = useState('')
-  const [nameError, setNameError] = useState({ errorMessage: '' })
-  const [description, setDescription] = useState('')
-  const [descriptionError, setDescriptionError] = useState({ errorMessage: '' })
-  const [isNameValid, setIsNameValid] = useState(false)
-  const [isDescriptionValid, setIsDescriptionValid] = useState(false)
-  const isFormValid = isNameValid && isDescriptionValid;
+  const [formData, setFormData] = useState({ name: '', about: '' });
+  const [error, setError] = useState({ name: '', about: '' })
+  const isFormValid = !error.name && !error.about;
 
   useEffect(() => {
-    setNameError({ errorMessage: '' });
-    setDescriptionError({ errorMessage: '' });
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-    setIsNameValid(true);
-    setIsDescriptionValid(true);
+    setFormData({ name: currentUser.name, about: currentUser.about });
   }, [currentUser, isOpen])
 
-  function handleNameChange(evt) {
-    setName(evt.target.value)
+  function handlChange(evt) {
+    setFormData({ ...formData, [evt.target.name]: evt.target.value });
 
     if (!evt.target.validity.valid) {
-      setNameError({ errorMessage: evt.target.validationMessage });
-      setIsNameValid(false);
+      setError({ ...error, [evt.target.name]: evt.target.validationMessage });
     } else {
-      setNameError({ errorMessage: '' });
-      setIsNameValid(true);
-    }
-  }
-
-  function handleDescriptionChange(evt) {
-    setDescription(evt.target.value)
-
-    if (!evt.target.validity.valid) {
-      setDescriptionError({ errorMessage: evt.target.validationMessage });
-      setIsDescriptionValid(false);
-    } else {
-      setDescriptionError({ errorMessage: '' });
-      setIsDescriptionValid(true);
+      setError({ ...error, [evt.target.name]: '' });
     }
   }
 
   function handleSubmit(evt) {
     evt.preventDefault()
     onUpdateUser({
-      name: name,
-      about: description,
+      name: formData.name,
+      about: formData.about
     })
   }
 
@@ -64,7 +41,7 @@ export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePo
       isDisabled={!isFormValid}
     >
       <input
-        className={`form__input form__input_data_name`}
+        className={`form__input form__input_data_name ${error.name ? "form__input_type_error" : ""}`} 
         id="name-imput"
         type="text"
         name="name"
@@ -73,24 +50,24 @@ export default function EditProfilePopup({ isOpen, onUpdateUser, isEditProfilePo
         minLength="2"
         maxLength="40"
         pattern="^[a-zA-Zа-яА-я-\s]+$"
-        value={name || ''}
-        onChange={handleNameChange}
+        value={formData.name || ''}
+        onChange={handlChange}
       />
-      <span className={`form__error ${!isFormValid ? "form__error_visible" : ""}`} >{nameError.errorMessage}</span>
+      <span className={`form__error ${error.name ? "form__error_visible" : ""}`} >{error.name}</span>
       <input
-        className={`form__input form__input_data_job`}
+        className={`form__input form__input_data_job ${error.about ? "form__input_type_error" : ""}`}
         id="job-imput"
         type="text"
-        name="job"
+        name="about"
         placeholder="О себе"
         required
         minLength="2"
         maxLength="200"
         pattern="^[a-zA-Zа-яА-я-\s]+$"
-        value={description || ''}
-        onChange={handleDescriptionChange}
+        value={formData.about || ''}
+        onChange={handlChange}
       />
-      <span className={`form__error ${!isDescriptionValid ? "form__error_visible" : ""}`} >{descriptionError.errorMessage}</span>
+      <span className={`form__error ${error.about ? "form__error_visible" : ""}`} >{error.about}</span>
     </PopupWithForm>
   )
 }

@@ -36,7 +36,6 @@ export default function App() {
   const [isConfirmPopupLoading, setIsConfirmLoading] = useState(false);
   const [email, setEmail] = useState("");
 
-
   const history = useHistory();
   const [isInfoToolTipPopupOpen, setInfoToolTipPopupOpen] = useState(false);
   const [isSuccessTooltipStatus, setIsSuccessTooltipStatus] = useState(false);

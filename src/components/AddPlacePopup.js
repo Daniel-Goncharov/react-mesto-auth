@@ -2,44 +2,22 @@ import React, { useState, useEffect } from 'react'
 import PopupWithForm from './PopupWithForm'
 
 export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoading, onClose}) {
-  const [name, setName] = useState('')
-  const [nameError, setNameError] = useState({ errorMessage: '' })
-  const [link, setLink] = useState('')
-  const [linkError, setLinkError] = useState({ errorMessage: '' })
-  const [isNameValid, setIsNameValid] = useState(false)
-  const [isLinkValid, setIsLinkValid] = useState(false)
-  const isFormValid = isNameValid && isLinkValid;
+  const [formData, setFormData] = useState({ name: '', link: '' });
+  const [error, setError] = useState({ name: ' ', link: ' ' })
+  const isFormValid = !error.name && !error.link;
 
   useEffect(() => {
-    setNameError({ errorMessage: '' });
-    setLinkError({ errorMessage: '' });
-    setName('');
-    setLink('');
-    setIsNameValid(false);
-    setIsLinkValid(false);
+    setFormData({name: '', link: ''});
+    setError({name: ' ', link: ' '})
   }, [isOpen]);
 
-  function handleNameChange(evt) {
-    setName(evt.target.value)
+  function handleChange(evt) {
+    setFormData({ ...formData, [evt.target.name]: evt.target.value });
 
     if (!evt.target.validity.valid) {
-      setNameError({ errorMessage: evt.target.validationMessage });
-      setIsNameValid(false);
+      setError({ ...error, [evt.target.name]: evt.target.validationMessage });
     } else {
-      setNameError({ errorMessage: '' });
-      setIsNameValid(true);
-    }
-  }
-
-  function handleLinkChange(evt) {
-    setLink(evt.target.value)
-
-    if (!evt.target.validity.valid) {
-      setLinkError({ errorMessage: evt.target.validationMessage });
-      setIsLinkValid(false);
-    } else {
-      setLinkError({ errorMessage: '' });
-      setIsLinkValid(true);
+      setError({ ...error, [evt.target.name]: '' });
     }
   }
 
@@ -47,8 +25,8 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
     evt.preventDefault();
 
     onAddPlace({
-      name: name,
-      link: link
+      name: formData.name,
+      link: formData.link
     })
   }
 
@@ -63,7 +41,7 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
       isDisabled={!isFormValid}
     >
       <input
-        className={`form__input form__input_data_place-url`}
+        className={`form__input form__input_data_place-url ${error.name ? "form__input_type_error" : ""}`}
         id="placeName-input"
         type="text"
         name="name"
@@ -72,21 +50,21 @@ export default function AddPlacePopup({ isOpen, onAddPlace, isAddPlacePopupLoadi
         maxLength="30"
         pattern="^[a-zA-Zа-яА-я-\s]+$"
         required
-        value={name}
-        onChange={handleNameChange}
+        value={formData.name}
+        onChange={handleChange}
       />
-      <span className={`form__error placeName-input-error ${!isNameValid ? "form__error_visible" : ""}`} >{nameError.errorMessage}</span>
+      <span className={`form__error placeName-input-error ${error.name ? "form__error_visible" : ""}`} >{error.name}</span>
       <input
-        className={`form__input form__input_data_place-url`}
+        className={`form__input form__input_data_place-url ${error.link ? "form__input_type_error" : ""}`}
         id="placeUrl-input"
         type="url"
         name="link"
         placeholder="Ссылка на картинку"
         required
-        value={link}
-        onChange={handleLinkChange}
+        value={formData.link}
+        onChange={handleChange}
       />
-      <span className={`form__error placeUrl-input-error ${!isLinkValid ? "form__error_visible" : ""}`} >{linkError.errorMessage}</span>
+      <span className={`form__error placeUrl-input-error ${error.link ? "form__error_visible" : ""}`} >{error.link}</span>
     </PopupWithForm>
   )
 }
